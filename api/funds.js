@@ -1,9 +1,34 @@
-const { FUNDS, json, getFundData, mapLimit } = require("./shared.cjs");
+const { FUNDS, json, getFundData, mapLimit, isCode } = require("./shared.cjs");
+
+function makeGenericFund(code) {
+  return {
+    code,
+    name: `自定义基金 ${code}`,
+    category: "自定义基金",
+    group: "主题增强观察",
+    risk: "中高",
+    tag: "自定义",
+    manager: "待补充",
+    managerType: "自定义/待补充",
+    managerScore: 3,
+    industryNote: "自定义添加基金，行业说明待补充。",
+    managerNote: "自定义添加基金，基金经理信息待补充。",
+    fundNote: "自定义添加基金，可在真实数据导入中覆盖周期收益和净值数据。",
+    actionNote: "先观察数据和波动，不做重仓决策。",
+    week: 0,
+    month: 0,
+    halfYear: 0,
+    year: 0,
+    since: 0,
+  };
+}
 
 module.exports = async function handler(req, res) {
   try {
     const queryCodes = String(req.query.codes || "").split(",").map(s => s.trim()).filter(Boolean);
-    const wanted = queryCodes.length ? FUNDS.filter(f => queryCodes.includes(f.code)) : FUNDS;
+    const wanted = queryCodes.length
+      ? queryCodes.filter(isCode).map(code => FUNDS.find(f => f.code === code) || makeGenericFund(code))
+      : FUNDS;
     const results = await mapLimit(wanted, 10, getFundData);
     const data = {};
     for (const r of results) data[r.code] = r;
