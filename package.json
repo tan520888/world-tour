@@ -1,0 +1,13 @@
+{
+  "name": "fund-dashboard-max-v5",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基金作战面板 Max V5 - Vercel deployable website",
+  "scripts": {
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
