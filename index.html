@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>基金作战面板 Max V10</title>
+<title>星河养基 Pro</title>
 <link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/v11.css" />
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div>
-      <h1>基金作战面板 Max V10</h1>
-      <div class="sub">基金总表卡片化｜日净值走势图｜经理深度搜索｜本地邮箱登录｜30秒自动刷新</div>
-      <div class="warn">走势图按每日公布净值更新；邮箱登录目前是本地账号标识，不是云端真实绑定。</div>
+      <h1>星河养基 Pro</h1>
+      <div class="sub">基金观察｜持有记录｜日净值走势图｜经理分析｜30秒自动刷新</div>
+      <div class="warn">走势图按每日公布净值绘制；邮箱入口为本地身份入口，真正验证码登录需后续接 Supabase / Firebase。</div>
     </div>
     <div class="top-actions">
       <div class="pill login" id="loginBox"></div>
@@ -36,7 +37,7 @@
   <nav class="nav">
     <button class="tab active" data-v="dash">推荐分层</button>
     <button class="tab" data-v="table">基金总表</button>
-    <button class="tab" data-v="manager">经理深度</button>
+    <button class="tab" data-v="manager">经理分析</button>
     <button class="tab" data-v="add">添加基金导入</button>
     <button class="tab" data-v="data">真实数据导入</button>
   </nav>
@@ -72,8 +73,8 @@
   <section id="manager" class="view">
     <div class="grid">
       <div class="card">
-        <h2>经理深度 + 板块分析</h2>
-        <p class="note">可搜索基金代码、基金名称、基金经理、行业方向。右侧会显示更详细的行业机会、产品解读、相关板块和风险点。</p>
+        <h2>经理分析 + 板块机会</h2>
+        <p class="note">可搜索基金代码、基金名称、基金经理、行业方向。右侧显示行业机会、产品定位、相关板块、观察指标和风险点。</p>
         <input id="mkw" class="search full" placeholder="搜索基金经理 / 基金 / 板块 / 行业" />
         <div class="manager-list" id="managerList"></div>
       </div>
@@ -102,14 +103,16 @@
 </div>
 
 <div class="modal" id="loginModal">
-  <div class="modal-card">
-    <h3>邮箱登录 / 本地账号</h3>
-    <p class="note">当前版本是本地账号标识：邮箱会保存在浏览器 localStorage，用来区分你的持有基金和自定义基金。真正邮箱验证码登录需要接 Supabase / Firebase / 数据库服务。</p>
+  <div class="modal-card login-card-v11">
+    <div class="login-hero">✉️</div>
+    <h3>邮箱身份入口</h3>
+    <p class="note">用于在本浏览器保存你的持有基金、添加基金和主题偏好。真正“邮箱验证码登录/云端同步”需要后续接 Supabase、Firebase 或自建数据库。</p>
     <input id="emailInput" class="full" placeholder="输入邮箱，例如 tansir@example.com" />
-    <div class="row modal-actions"><button class="btn" id="loginSave">保存登录</button><button class="btn2" id="loginClose">关闭</button></div>
+    <div class="row modal-actions"><button class="btn" id="loginSave">保存邮箱身份</button><button class="btn2" id="loginClose">关闭</button></div>
   </div>
 </div>
 
 <script src="/app.js"></script>
+<script src="/patch-v11.js"></script>
 </body>
 </html>
