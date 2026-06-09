@@ -5,7 +5,7 @@ function send(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
-async function fetchText(url, timeoutMs = 9000) {
+async function fetchText(url, timeoutMs = 10000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -28,8 +28,8 @@ function normalizePoints(rows) {
   return rows.map(r => ({
     date: r.FSRQ || r.date || '',
     nav: Number(r.DWJZ || r.nav || 0),
-    growth: r.JZZZL === '' || r.JZZZL == null ? null : Number(r.JZZZL || r.growth || 0)
-  })).filter(x => x.date && x.nav > 0).reverse();
+    growth: r.JZZZL === '' || r.JZZZL == null ? null : Number(String(r.JZZZL || r.growth || 0).replace('%',''))
+  })).filter(x => x.date && x.nav > 0).sort((a,b)=>a.date.localeCompare(b.date));
 }
 
 async function fetchJsonpHistory(code, size) {
@@ -60,7 +60,12 @@ async function fetchHtmlHistory(code, size) {
       rows.push({ FSRQ: cells[0], DWJZ: cells[1], JZZZL: (cells[3] || '').replace('%', '') });
     }
   }
-  return normalizePoints(rows.reverse());
+  return normalizePoints(rows);
+}
+
+function keepByRange(points, range) {
+  const keep = range >= 365 ? 260 : range >= 180 ? 130 : range >= 90 ? 70 : 24;
+  return points.slice(-Math.min(points.length, keep));
 }
 
 module.exports = async function handler(req, res) {
@@ -68,8 +73,8 @@ module.exports = async function handler(req, res) {
     const code = String(req.query.code || '').trim();
     const range = parseInt(req.query.range || req.query.days || '180', 10);
     const requested = parseInt(req.query.size || '360', 10);
-    const minForRange = range >= 365 ? 560 : range >= 180 ? 300 : range >= 90 ? 160 : 70;
-    const size = Math.min(Math.max(requested, minForRange, 30), 1200);
+    const minForRange = range >= 365 ? 620 : range >= 180 ? 360 : range >= 90 ? 180 : 80;
+    const size = Math.min(Math.max(requested, minForRange, 30), 1500);
     if (!/^\d{6}$/.test(code)) return send(res, 400, { ok: false, msg: '基金代码必须是6位数字' });
 
     let points = [];
@@ -80,9 +85,28 @@ module.exports = async function handler(req, res) {
     }
 
     if (points.length > 1) {
-      const keep = range >= 365 ? Math.min(points.length, 260) : range >= 180 ? Math.min(points.length, 130) : range >= 90 ? Math.min(points.length, 70) : Math.min(points.length, 24);
-      points = points.slice(-keep);
-      return send(res, 200, { ok: true, code, count: points.length, points, range, size, source, updated_at: new Date().toLocaleString('zh-CN', { hour12: false }) });
+      points = keepByRange(points, range);
+      const vals = points.map(p => p.nav);
+      const first = points[0], last = points[points.length - 1];
+      return send(res, 200, {
+        ok: true,
+        code,
+        count: points.length,
+        points,
+        range,
+        size,
+        source,
+        stats: {
+          first_date: first.date,
+          last_date: last.date,
+          first_nav: first.nav,
+          last_nav: last.nav,
+          change_pct: (last.nav / first.nav - 1) * 100,
+          high: Math.max(...vals),
+          low: Math.min(...vals)
+        },
+        updated_at: new Date().toLocaleString('zh-CN', { hour12: false })
+      });
     }
 
     send(res, 200, { ok: false, code, msg: '该基金历史净值接口暂时没有返回可绘制数据，可稍后刷新或打开基金详情页查看。', range, size });
