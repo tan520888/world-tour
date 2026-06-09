@@ -5,7 +5,7 @@ function send(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
-async function fetchText(url, timeoutMs = 5000) {
+async function fetchText(url, timeoutMs = 8000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -27,7 +27,10 @@ async function fetchText(url, timeoutMs = 5000) {
 module.exports = async function handler(req, res) {
   try {
     const code = String(req.query.code || '').trim();
-    const size = Math.min(Math.max(parseInt(req.query.size || '360', 10), 30), 800);
+    const range = parseInt(req.query.range || '180', 10);
+    const requested = parseInt(req.query.size || '360', 10);
+    const minForRange = range >= 365 ? 560 : range >= 180 ? 300 : range >= 90 ? 160 : 70;
+    const size = Math.min(Math.max(requested, minForRange, 30), 1200);
     if (!/^\d{6}$/.test(code)) return send(res, 400, { ok: false, msg: '基金代码必须是6位数字' });
 
     const cb = `jQuery${Date.now()}`;
@@ -42,7 +45,7 @@ module.exports = async function handler(req, res) {
       nav: Number(r.DWJZ || 0),
       growth: r.JZZZL === '' || r.JZZZL == null ? null : Number(r.JZZZL)
     })).filter(x => x.date && x.nav > 0).reverse();
-    send(res, 200, { ok: true, code, count: points.length, points });
+    send(res, 200, { ok: true, code, count: points.length, points, range, size });
   } catch (e) {
     send(res, 200, { ok: false, msg: '走势图接口失败' });
   }
