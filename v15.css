@@ -1,0 +1,24 @@
+/* V15: 更清楚的基金净值走势图 */
+.trend-v15{
+  margin:14px 0 18px;
+  padding:18px;
+  border:1px solid var(--bd);
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.028));
+  box-shadow:0 18px 44px rgba(0,0,0,.28);
+}
+.trend-v15-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+.trend-v15-title{font-size:20px;font-weight:900;margin-bottom:4px}
+.trend-v15-sub{font-size:12px;color:var(--muted);line-height:1.6}
+.trend-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.trend-tools .range-btn{background:rgba(255,255,255,.045);border:1px solid var(--bd);color:#cbd5e1;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.trend-tools .range-btn.active{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;border-color:transparent;box-shadow:0 8px 22px rgba(79,140,255,.22)}
+.trend-tools .chart-action{background:rgba(255,255,255,.045);border:1px solid var(--bd);color:#cbd5e1;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.trend-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 12px}
+.trend-stat{padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(10,20,36,.62)}
+.trend-stat .k{font-size:12px;color:var(--muted);margin-bottom:4px}.trend-stat .v{font-size:17px;font-weight:900}
+.chart-shell{width:100%;height:360px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(11,21,38,.86),rgba(8,16,29,.9));overflow:hidden;position:relative}
+.chart-shell svg{width:100%;height:100%;display:block}.chart-loading{padding:28px;border:1px dashed rgba(255,255,255,.16);border-radius:18px;background:rgba(10,20,36,.45)}
+.chart-tip{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}.chart-tip a{color:#9ec0ff;text-decoration:none}
+.nav-label{font-size:11px;fill:#8da2c0}.nav-grid{stroke:rgba(255,255,255,.08);stroke-width:1}.nav-line{fill:none;stroke:#4f8cff;stroke-width:3;vector-effect:non-scaling-stroke}.nav-area{fill:url(#navAreaV15)}.nav-point{fill:#fff;stroke:#4f8cff;stroke-width:3;vector-effect:non-scaling-stroke}.chart-empty{padding:18px;border-radius:16px;background:rgba(255,91,110,.08);border:1px solid rgba(255,91,110,.22);color:#ffd1d7}.chart-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}.chart-list div{padding:8px;border-radius:12px;background:rgba(255,255,255,.04);font-size:12px}.chart-list b{display:block;margin-bottom:3px}
+@media(max-width:900px){.trend-stats{grid-template-columns:repeat(2,1fr)}.chart-shell{height:300px}.trend-v15-head{display:block}.trend-tools{justify-content:flex-start;margin-top:10px}.chart-list{grid-template-columns:repeat(2,1fr)}}
