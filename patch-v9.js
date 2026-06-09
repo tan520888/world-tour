@@ -1,4 +1,18 @@
 // V9 display patch: better fund cards, inline daily NAV chart, manager search.
+// Boot safety: create missing DOM ids before calling render(), otherwise the page can fail to open.
+(function(){
+  try{
+    var cards=document.querySelector('.cards');
+    if(cards && !document.getElementById('cntHold')){
+      var hold=document.createElement('div');
+      hold.className='card';
+      hold.innerHTML='<div class="label">持有基金</div><div class="big blue" id="cntHold">0只</div><div class="note">本地保存</div>';
+      cards.appendChild(hold);
+    }
+    var ms=document.getElementById('managerSearch');
+    if(ms && !document.getElementById('mkw')) ms.id='mkw';
+  }catch(e){console.warn('boot safety skipped',e)}
+})();
 function dcell(d){return d&&d.ok?`<div class="quote ${cls(d.gszzl)}"><b>${fmt(d.gszzl)}</b><div class="mini">净值 ${d.gsz||d.dwjz||'—'}</div></div>`:'<div class="quote"><b>—</b><div class="mini">—</div></div>'}
 function v9Status(d){if(d&&d.ok)return `<span class="green">${d.source||'已更新'}${d.note?'｜'+d.note:''}</span>`;if(d)return `<span class="fail">${d.msg||'失败'}</span>`;return '<span class="mini">等待</span>'}
 function v9Perf(f){return `<div class="perf"><div><span class="mini">周</span><b class="${cls(f.week)}">${fmt(f.week)}</b></div><div><span class="mini">月</span><b class="${cls(f.month)}">${fmt(f.month)}</b></div><div><span class="mini">半年</span><b class="${cls(f.halfYear)}">${fmt(f.halfYear)}</b></div><div><span class="mini">一年</span><b class="${cls(f.year)}">${fmt(f.year)}</b></div><div><span class="mini">成立</span><b class="${cls(f.since)}">${fmt(f.since)}</b></div></div>`}
