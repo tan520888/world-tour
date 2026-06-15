@@ -1,0 +1,47 @@
+/* V16 ranking + chart improvements */
+.rank-root { display: grid; gap: 14px; }
+.rank-hero { display:flex; justify-content:space-between; gap:16px; align-items:center; }
+.rank-hero h2 { margin:0 0 6px; font-size:26px; }
+.rank-stamp { text-align:right; color:var(--muted); font-size:12px; min-width:180px; }
+.rank-stamp b { color:var(--text); font-size:14px; }
+.rank-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.rank-grid .card h3 { margin-top:0; }
+.rank-fund-card,.sector-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.07); cursor:pointer; }
+.rank-fund-card:hover,.sector-row:hover { background:rgba(255,255,255,.035); }
+.rank-no { font-weight:900; color:#ffd28a; }
+.rank-main b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rank-side { text-align:right; display:grid; gap:3px; }
+.rank-side small { color:var(--muted); font-size:11px; }
+.sector-row { grid-template-columns:42px minmax(0,1fr) 42px; cursor:default; }
+.market-note p { color:#b6c4d8; line-height:1.75; margin-bottom:0; }
+.v16-card { border-color:rgba(79,140,255,.22); }
+.v16-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:12px 0; }
+.v16-metrics div,.trend-stat-grid div { border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; background:rgba(255,255,255,.035); }
+.v16-metrics span,.trend-stat-grid span { display:block; color:var(--muted); font-size:11px; margin-bottom:4px; }
+.v16-metrics b,.trend-stat-grid b { font-size:14px; }
+.v16-quote { min-width:116px; text-align:right; }
+.trend-v16 { margin-bottom:14px; padding:18px; border:1px solid rgba(79,140,255,.28); }
+.trend-v16-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:12px; }
+.trend-v16-head h2 { margin:0 0 4px; font-size:22px; }
+.trend-tools { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.range-btn,.chart-action { border:1px solid var(--bd); background:rgba(255,255,255,.045); color:#cbd5e1; border-radius:12px; padding:9px 12px; cursor:pointer; font-weight:700; }
+.range-btn.active { background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:white; border-color:transparent; }
+.trend-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+.v16-chart-wrap { width:100%; height:380px; border:1px solid rgba(255,255,255,.08); border-radius:18px; overflow:hidden; background:linear-gradient(180deg,rgba(79,140,255,.08),rgba(35,196,131,.025)); }
+.v16-chart-wrap svg { width:100%; height:100%; display:block; }
+.v16-grid { stroke:rgba(255,255,255,.08); stroke-width:1; }
+.v16-label { fill:#8da2c0; font-size:12px; }
+.v16-area { fill:url(#v16area); }
+.v16-line { fill:none; stroke:#7c7cff; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+.v16-point { fill:#23c483; stroke:#fff; stroke-width:2; }
+.v16-recent { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-top:10px; }
+.v16-recent div { border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:8px; display:flex; gap:8px; justify-content:space-between; align-items:center; font-size:12px; }
+.v16-recent span { color:var(--muted); }
+.v16-recent em { font-style:normal; }
+.chart-empty { padding:28px; color:#cbd5e1; }
+@media(max-width:1100px){
+  .rank-grid,.v16-metrics,.trend-stat-grid,.v16-recent { grid-template-columns:1fr; }
+  .rank-hero,.trend-v16-head { display:block; }
+  .rank-stamp { text-align:left; margin-top:10px; }
+  .v16-chart-wrap { height:300px; }
+}
