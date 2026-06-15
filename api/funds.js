@@ -1,4 +1,13 @@
 const { FUNDS, json, getFundData, mapLimit, isCode } = require("./shared.cjs");
+const { EXTRA_FUNDS } = require("./extra-funds.cjs");
+
+function uniqFunds(list) {
+  const map = new Map();
+  for (const f of list) if (f && f.code && !map.has(f.code)) map.set(f.code, f);
+  return [...map.values()];
+}
+
+const ALL_FUNDS = uniqFunds([...FUNDS, ...EXTRA_FUNDS]);
 
 function makeGenericFund(code) {
   return {
@@ -27,8 +36,8 @@ module.exports = async function handler(req, res) {
   try {
     const queryCodes = String(req.query.codes || "").split(",").map(s => s.trim()).filter(Boolean);
     const wanted = queryCodes.length
-      ? queryCodes.filter(isCode).map(code => FUNDS.find(f => f.code === code) || makeGenericFund(code))
-      : FUNDS;
+      ? queryCodes.filter(isCode).map(code => ALL_FUNDS.find(f => f.code === code) || makeGenericFund(code))
+      : ALL_FUNDS;
     const results = await mapLimit(wanted, 10, getFundData);
     const data = {};
     for (const r of results) data[r.code] = r;
