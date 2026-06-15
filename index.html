@@ -9,14 +9,15 @@
 <link rel="stylesheet" href="/v12.css" />
 <link rel="stylesheet" href="/v14.css" />
 <link rel="stylesheet" href="/v15.css" />
+<link rel="stylesheet" href="/v16.css" />
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div>
       <h1>ikun基金</h1>
-      <div class="sub">基金观察｜持有记录｜日净值走势图｜经理分析｜30秒自动刷新</div>
-      <div class="warn">日净值走势、基金总表与持有记录统一刷新；右上角可登录，背景颜色切换不会受持有基金筛选影响。</div>
+      <div class="sub">基金观察｜持有记录｜基金排行｜热门板块｜日净值走势图｜经理分析｜30秒自动刷新</div>
+      <div class="warn">新增基金排行、热门行业方向、近一年涨幅、历史回撤和更稳定的日净值走势图；数据来自公开接口，失败不造假。</div>
     </div>
     <div class="top-actions">
       <div class="pill">⏱ <span id="clock">--:--:--</span></div>
@@ -39,6 +40,7 @@
 
   <nav class="nav">
     <button class="tab active" data-v="dash">推荐分层</button>
+    <button class="tab" data-v="rank">基金排行</button>
     <button class="tab" data-v="table">基金总表</button>
     <button class="tab" data-v="manager">经理分析</button>
     <button class="tab" data-v="add">添加基金导入</button>
@@ -50,6 +52,10 @@
       <div class="bucket" id="buckets"></div>
       <div class="card detail" id="quick"></div>
     </div>
+  </section>
+
+  <section id="rank" class="view">
+    <div id="rankRoot" class="rank-root"></div>
   </section>
 
   <section id="table" class="view">
@@ -147,5 +153,6 @@
 <script src="/app.js"></script>
 <script src="/patch-v9.js"></script>
 <script src="/patch-v15.js"></script>
+<script src="/patch-v16.js"></script>
 </body>
 </html>
