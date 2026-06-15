@@ -10,17 +10,14 @@
 <link rel="stylesheet" href="/v14.css" />
 <link rel="stylesheet" href="/v15.css" />
 <link rel="stylesheet" href="/v16.css" />
-<link rel="stylesheet" href="/v20.css" />
-<link rel="stylesheet" href="/v21.css" />
-<link rel="stylesheet" href="/v22.css" />
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div>
       <h1>ikun基金</h1>
-      <div class="sub">基金观察｜行情资讯｜基金排行｜持有记录｜日净值走势图｜经理分析｜30秒自动刷新</div>
-      <div class="warn">顶部加入指数快照、热点板块和看盘提示；新增更多主题颜色，筛选类目不会改变背景主题。</div>
+      <div class="sub">基金观察｜持有记录｜基金排行｜日净值走势图｜经理分析｜30秒自动刷新</div>
+      <div class="warn">已临时回到稳定布局，先保证页面正常打开；后续功能再逐个加回。</div>
     </div>
     <div class="top-actions">
       <div class="pill">⏱ <span id="clock">--:--:--</span></div>
@@ -43,7 +40,6 @@
 
   <nav class="nav">
     <button class="tab active" data-v="dash">推荐分层</button>
-    <button class="tab" data-v="market">行情资讯</button>
     <button class="tab" data-v="rank">基金排行</button>
     <button class="tab" data-v="table">基金总表</button>
     <button class="tab" data-v="manager">经理分析</button>
@@ -58,10 +54,6 @@
     </div>
   </section>
 
-  <section id="market" class="view">
-    <div id="marketRoot" class="market-page"></div>
-  </section>
-
   <section id="rank" class="view">
     <div id="rankRoot" class="rank-root"></div>
   </section>
@@ -73,7 +65,6 @@
           <input id="kw" class="search" placeholder="搜索代码/基金/分层/行业" />
           <select id="group">
             <option>全部</option>
-            <option>自选基金</option>
             <option>持有基金</option>
             <option>低位观察</option>
             <option>核心定投观察</option>
@@ -164,9 +155,5 @@
 <script src="/patch-v15.js"></script>
 <script src="/patch-v16.js"></script>
 <script src="/patch-v17.js"></script>
-<script src="/patch-v20-market.js"></script>
-<script src="/patch-v20-chart.js"></script>
-<script src="/patch-v21.js"></script>
-<script src="/patch-v22.js"></script>
 </body>
 </html>
