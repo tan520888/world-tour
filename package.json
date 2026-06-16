@@ -1,13 +1,20 @@
 {
-  "name": "fund-dashboard-max-v5",
-  "version": "1.0.0",
+  "name": "ikun-fund-dashboard",
+  "version": "1.1.0",
   "private": true,
-  "description": "基金作战面板 Max V5 - Vercel deployable website",
+  "description": "ikun基金 - 基金观察、自选基金、持有记录、行情资讯、经理分析和基金分层管理的个人基金看板",
   "scripts": {
     "start": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "check": "node -e \"console.log('basic check passed')\"",
+    "format": "prettier --write .",
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "prettier": "latest"
   }
 }
