@@ -4,9 +4,11 @@
   function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function pct(v){if(v===undefined||v===null||v===''||Number.isNaN(Number(v)))return '—';v=Number(v);return (v>=0?'+':'')+v.toFixed(2)+'%'}
   function cls(v){if(v===undefined||v===null||v===''||Number.isNaN(Number(v)))return '';return Number(v)>=0?'red':'green'}
+  function addScript(src){if(!document.querySelector(`script[src="${src}"]`)){const s=document.createElement('script');s.src=src;s.async=false;document.body.appendChild(s)}}
   function loadThemePack(){
     if(!document.querySelector('link[href="/v24.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/v24.css';document.head.appendChild(l)}
-    if(!document.querySelector('script[src="/patch-v24-theme.js"]')){const s=document.createElement('script');s.src='/patch-v24-theme.js';document.body.appendChild(s)}
+    addScript('/patch-v24-theme.js');
+    addScript('/patch-v25-nav-theme-lock.js');
   }
   function ensureMarketSection(){
     if(!$('market')){const s=document.createElement('section');s.id='market';s.className='view';s.innerHTML='<div id="marketRoot" class="market-lite"></div>';document.querySelector('.view')?.insertAdjacentElement('afterend',s)}
