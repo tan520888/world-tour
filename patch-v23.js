@@ -1,4 +1,4 @@
-// V23: 稳定版行情资讯。放在“持有基金”卡片后面，并在导航末尾加入入口。
+// V23: 稳定版行情资讯 + 顶部快捷功能卡。
 (function(){
   const $=id=>document.getElementById(id);
   function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -10,16 +10,17 @@
     addScript('/patch-v24-theme.js');
     addScript('/patch-v25-nav-theme-lock.js');
   }
+  function jumpTableGroup(group){try{show('table');const g=$('group');if(g){g.value=group;g.dispatchEvent(new Event('change',{bubbles:true}))}if(typeof render==='function')render();window.keepThemeFixed&&window.keepThemeFixed()}catch(e){}}
   function ensureMarketSection(){
     if(!$('market')){const s=document.createElement('section');s.id='market';s.className='view';s.innerHTML='<div id="marketRoot" class="market-lite"></div>';document.querySelector('.view')?.insertAdjacentElement('afterend',s)}
     const nav=document.querySelector('.nav');
     if(nav&&!document.querySelector('[data-v="market"]')){const b=document.createElement('button');b.className='tab market-added';b.dataset.v='market';b.textContent='行情资讯';b.onclick=()=>{show('market');loadMarketLite()};nav.appendChild(b)}
-    if(nav&&!$('navExtraNote')){const n=document.createElement('div');n.id='navExtraNote';n.className='nav-extra-note';n.textContent='行情资讯、板块总览、热点提示已放在这一行后面，点击“行情资讯”查看。';nav.insertAdjacentElement('afterend',n)}
+    if(nav&&!$('navExtraNote')){const n=document.createElement('div');n.id='navExtraNote';n.className='nav-extra-note';n.textContent='常用入口已放在顶部卡片后面：自选基金、快速添加。行情资讯在导航栏中查看。';nav.insertAdjacentElement('afterend',n)}
   }
   function ensureTopActionCards(){
     const cards=document.querySelector('.cards'); if(!cards) return;
-    if(!$('marketActionCard')){const c=document.createElement('div');c.id='marketActionCard';c.className='card action-card';c.onclick=()=>{show('market');loadMarketLite()};c.innerHTML='<div class="label">行情资讯</div><div class="big blue">指数/板块</div><div class="note">点击查看行情</div>';cards.appendChild(c)}
-    if(!$('newsActionCard')){const c=document.createElement('div');c.id='newsActionCard';c.className='card action-card';c.onclick=()=>{show('market');loadMarketLite()};c.innerHTML='<div class="label">热点事件</div><div class="big purple">新闻提示</div><div class="note">市场看盘摘要</div>';cards.appendChild(c)}
+    if(!$('marketActionCard')){const c=document.createElement('div');c.id='marketActionCard';c.className='card action-card';c.onclick=()=>jumpTableGroup('自选基金');c.innerHTML='<div class="label">我的自选</div><div class="big blue">自选基金</div><div class="note">查看已添加</div>';cards.appendChild(c)}
+    if(!$('newsActionCard')){const c=document.createElement('div');c.id='newsActionCard';c.className='card action-card';c.onclick=()=>show('add');c.innerHTML='<div class="label">快速管理</div><div class="big purple">添加/导入</div><div class="note">搜索添加基金</div>';cards.appendChild(c)}
   }
   async function loadMarketLite(){
     ensureMarketSection(); const root=$('marketRoot'); if(!root) return;
