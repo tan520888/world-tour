@@ -14,6 +14,7 @@
   function loadManagerBoard(){loadScript('/manager-board.js?v=1')}
   function loadPortfolioPro(){loadScript('/portfolio-pro.js?v=1')}
   function loadHotThemeShortcuts(){loadScript('/hot-theme-shortcuts.js?v=1')}
+  function loadAiSummaryRules(){loadScript('/ai-summary-rules.js?v=1')}
   function setupPWA(){
     if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement('link');l.rel='manifest';l.href='/manifest.json';document.head.appendChild(l)}
     if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){var a=document.createElement('meta');a.name='apple-mobile-web-app-capable';a.content='yes';document.head.appendChild(a)}
@@ -25,6 +26,6 @@
   function installMarketCache(){window.loadMarketLite=async function(){var root=$('marketRoot');if(root)root.innerHTML='<div class="card">正在加载行情资讯……</div>';try{var m=await fetchWithFundCache('market-lite-v1','/api/market',3*60*60*1000);renderMarket(m)}catch(e){if(root)root.innerHTML='<div class="card">行情资讯加载失败，请稍后再试。</div>'}}}
   document.addEventListener('visibilitychange',function(){if(document.hidden){setPaused(true)}else{setPaused(false);wrapRefresh();try{if(typeof refresh==='function')refresh()}catch(e){console.warn('切回页面刷新失败：',e)}}});
   var timer=setInterval(function(){wrapRefresh();if(window.__visibilityRefreshWrapped)clearInterval(timer)},300);
-  function boot(){setupPWA();loadManagerBoard();loadPortfolioPro();loadHotThemeShortcuts();installMarketCache()}
+  function boot(){setupPWA();loadManagerBoard();loadPortfolioPro();loadHotThemeShortcuts();loadAiSummaryRules();installMarketCache()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else setTimeout(boot,300);
 })();
