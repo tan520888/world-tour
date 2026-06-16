@@ -1,0 +1,6 @@
+/* V26 fixed background override */
+html body{background:radial-gradient(circle at 8% -10%,var(--bg1,#102446) 0%,var(--bg2,#07111f) 46%,var(--bg3,#050b14) 100%) fixed!important;transition:none!important;color:var(--txt,#e5edf8)!important}
+body.light-mode{color:#0f172a!important}
+body.light-mode .card,body.light-mode .pill,body.light-mode .bucket-card,body.light-mode .fund-card,body.light-mode .result,body.light-mode .custom,body.light-mode .manager-item,body.light-mode .modal-card,body.light-mode .trend{background:rgba(255,255,255,.78)!important;border-color:#d7e0ee!important;box-shadow:0 16px 36px rgba(15,23,42,.10)!important}
+body.light-mode .sub,body.light-mode .note,body.light-mode .mini,body.light-mode .status,body.light-mode .label{color:#64748b!important}
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:#fff!important;color:#0f172a!important;border-color:#cbd5e1!important}
