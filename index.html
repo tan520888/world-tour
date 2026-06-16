@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ikun基金 V1.4 - 基金作战面板</title>
-<meta name="description" content="ikun基金 V1.4 是一个用于基金观察、自选基金、持仓计划、行情估值、经理分析、PWA、本地持仓管理和规则版 AI 总结的个人基金看板。" />
+<title>ikun基金 V1.5 - 基金作战面板</title>
+<meta name="description" content="ikun基金 V1.5 是一个用于基金观察、自选基金、持仓计划、行情估值、经理分析、PWA、本地持仓管理、规则版 AI 总结和体验维护工具的个人基金看板。" />
 <meta name="keywords" content="基金看板,基金估值,基金排行,基金经理分析,自选基金,持有基金,持仓盈亏,PWA,AI总结,基金作战面板" />
 <meta name="theme-color" content="#07111f" />
 <meta name="application-name" content="ikun基金" />
@@ -14,11 +14,11 @@
 <link rel="manifest" href="/manifest.json" />
 <link rel="canonical" href="https://world-tour-tau.vercel.app/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<meta property="og:title" content="ikun基金 V1.4 - 基金作战面板" />
-<meta property="og:description" content="基金观察、行情资讯、持仓盈亏、经理分析、PWA、规则版 AI 总结和净值走势图。" />
+<meta property="og:title" content="ikun基金 V1.5 - 基金作战面板" />
+<meta property="og:description" content="基金观察、行情资讯、持仓盈亏、买卖记录编辑、一键清缓存、PWA、规则版 AI 总结和净值走势图。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://world-tour-tau.vercel.app/" />
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"ikun基金 V1.4","description":"基金观察、自选基金、持仓计划、行情资讯、经理分析、PWA、本地持仓管理和规则版 AI 总结的个人基金看板。","applicationCategory":"FinanceApplication","operatingSystem":"Web"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"ikun基金 V1.5","description":"基金观察、自选基金、持仓计划、行情资讯、经理分析、PWA、本地持仓管理、买卖记录编辑、一键清缓存和规则版 AI 总结的个人基金看板。","applicationCategory":"FinanceApplication","operatingSystem":"Web"}</script>
 <link rel="stylesheet" href="/site.css?v=4" />
 </head>
 <body>
@@ -26,8 +26,8 @@
   <header class="top">
     <div>
       <h1>ikun基金</h1>
-      <div class="sub">基金观察｜行情资讯｜持仓计划｜AI总结｜经理分析｜PWA｜30秒自动刷新</div>
-      <div class="warn">V1.4：加入规则版今日 AI 总结，基于基金池涨跌、持仓分布、重复度和风险等级生成组合提示。</div>
+      <div class="sub">基金观察｜行情资讯｜持仓计划｜AI总结｜买卖记录编辑｜PWA｜30秒自动刷新</div>
+      <div class="warn">V1.5：加入买卖记录编辑、本地数据维护、一键清缓存和 Service Worker 缓存清理。</div>
     </div>
     <div class="top-actions">
       <div class="pill">⏱ <span id="clock">--:--:--</span></div>
@@ -70,105 +70,50 @@
     <div id="marketRoot" class="market-lite"><div class="card"><h2>行情资讯</h2><p class="note">点击“加载行情资讯”查看今日午评、指数快照、板块强弱和风险提示。</p><button class="btn" onclick="loadMarketLite&&loadMarketLite()">加载行情资讯</button></div></div>
   </section>
 
-  <section id="rank" class="view">
-    <div id="rankRoot" class="rank-root"></div>
-  </section>
+  <section id="rank" class="view"><div id="rankRoot" class="rank-root"></div></section>
 
   <section id="table" class="view">
     <div class="card">
       <div class="toolbar">
         <div class="row">
           <input id="kw" class="search" placeholder="搜索代码/基金/分层/行业" />
-          <select id="group">
-            <option>全部</option>
-            <option>自选基金</option>
-            <option>持有基金</option>
-            <option>低位观察</option>
-            <option>核心定投观察</option>
-            <option>高波动观察</option>
-            <option>主题增强观察</option>
-          </select>
+          <select id="group"><option>全部</option><option>自选基金</option><option>持有基金</option><option>低位观察</option><option>核心定投观察</option><option>高波动观察</option><option>主题增强观察</option></select>
           <select id="cat"><option>全部</option></select>
         </div>
-        <div class="row">
-          <button class="btn" id="refresh">立即刷新</button>
-          <button class="btn2" id="toggleAuto">暂停自动刷新</button>
-          <button class="btn2" id="toggleImp">导入数据</button>
-        </div>
+        <div class="row"><button class="btn" id="refresh">立即刷新</button><button class="btn2" id="toggleAuto">暂停自动刷新</button><button class="btn2" id="toggleImp">导入数据</button></div>
       </div>
       <div class="status" id="status">正在加载数据……</div>
-      <div class="import" id="impBox">
-        <textarea id="impText" placeholder='[{"code":"011608","gszzl":-1.23,"gsz":1.2345,"week":-2.1}]'></textarea>
-        <button class="btn" id="impBtn">导入并显示</button>
-      </div>
-      <div id="trendPanel"></div>
-      <div id="fundCards" class="fund-list"></div>
-      <div class="table-wrap" style="display:none"><table><tbody id="tbody"></tbody></table></div>
+      <div class="import" id="impBox"><textarea id="impText" placeholder='[{"code":"011608","gszzl":-1.23,"gsz":1.2345,"week":-2.1}]'></textarea><button class="btn" id="impBtn">导入并显示</button></div>
+      <div id="trendPanel"></div><div id="fundCards" class="fund-list"></div><div class="table-wrap" style="display:none"><table><tbody id="tbody"></tbody></table></div>
     </div>
   </section>
 
   <section id="manager" class="view">
-    <div class="grid">
-      <div class="card">
-        <h2>经理分析 + 板块机会</h2>
-        <p class="note">可搜索基金代码、基金名称、基金经理或行业方向，右侧查看详细分析。</p>
-        <input id="managerSearch" class="search full" placeholder="搜索基金经理 / 基金 / 行业" />
-        <div id="managerList" class="manager-list"></div>
-        <div class="table-wrap" style="display:none"><table><tbody id="mtbody"></tbody></table></div>
-      </div>
-      <div class="card detail" id="mdetail"></div>
-    </div>
+    <div class="grid"><div class="card"><h2>经理分析 + 板块机会</h2><p class="note">可搜索基金代码、基金名称、基金经理或行业方向，右侧查看详细分析。</p><input id="managerSearch" class="search full" placeholder="搜索基金经理 / 基金 / 行业" /><div id="managerList" class="manager-list"></div><div class="table-wrap" style="display:none"><table><tbody id="mtbody"></tbody></table></div></div><div class="card detail" id="mdetail"></div></div>
   </section>
 
   <section id="add" class="view">
     <div class="card">
-      <h2>添加基金 / 批量导入</h2>
-      <p class="note">搜索基金代码、名称、拼音缩写，或批量粘贴基金代码。添加后保存在本浏览器。</p>
-      <div class="row target-row">
-        <span class="mini">添加目标：</span>
-        <select id="addTarget"><option value="self">自选基金</option><option value="hold">持有基金</option></select>
-      </div>
-      <div class="grid addgrid">
-        <div>
-          <h3>搜索添加</h3>
-          <div class="row"><input id="searchFund" class="search" placeholder="如 008888、白酒、NASDAQ" /><button class="btn" id="searchBtn">搜索基金</button></div>
-          <div class="status" id="searchStatus">输入关键词后点击搜索。</div>
-          <div class="result-list" id="results"></div>
-        </div>
-        <div>
-          <h3>批量导入代码</h3>
-          <textarea id="batch" placeholder="008888&#10;161725&#10;012725"></textarea>
-          <div class="row" style="margin-top:8px"><button class="btn" id="batchBtn">批量加入</button><button class="btn2" id="exportBtn">导出自定义</button><button class="btn2" id="clearBtn">清空自定义</button></div>
-        </div>
-      </div>
-      <h3>已添加基金</h3>
-      <div class="custom-list" id="customs"></div>
+      <h2>添加基金 / 批量导入</h2><p class="note">搜索基金代码、名称、拼音缩写，或批量粘贴基金代码。添加后保存在本浏览器。</p>
+      <div class="row target-row"><span class="mini">添加目标：</span><select id="addTarget"><option value="self">自选基金</option><option value="hold">持有基金</option></select></div>
+      <div class="grid addgrid"><div><h3>搜索添加</h3><div class="row"><input id="searchFund" class="search" placeholder="如 008888、白酒、NASDAQ" /><button class="btn" id="searchBtn">搜索基金</button></div><div class="status" id="searchStatus">输入关键词后点击搜索。</div><div class="result-list" id="results"></div></div><div><h3>批量导入代码</h3><textarea id="batch" placeholder="008888&#10;161725&#10;012725"></textarea><div class="row" style="margin-top:8px"><button class="btn" id="batchBtn">批量加入</button><button class="btn2" id="exportBtn">导出自定义</button><button class="btn2" id="clearBtn">清空自定义</button></div></div></div>
+      <h3>已添加基金</h3><div class="custom-list" id="customs"></div>
     </div>
   </section>
 
-  <section id="data" class="view">
-    <div class="card">
-      <h2>真实数据导入</h2>
-      <p class="note">导入 JSON 后会覆盖页面当前显示。</p>
-      <textarea id="impText2" placeholder='[{"code":"011608","gszzl":-1.23,"gsz":1.2345,"week":-2.1}]'></textarea>
-      <button class="btn" id="impBtn2">导入并覆盖</button>
-    </div>
-  </section>
+  <section id="data" class="view"><div class="card"><h2>真实数据导入</h2><p class="note">导入 JSON 后会覆盖页面当前显示。</p><textarea id="impText2" placeholder='[{"code":"011608","gszzl":-1.23,"gsz":1.2345,"week":-2.1}]'></textarea><button class="btn" id="impBtn2">导入并覆盖</button></div></section>
 
   <div class="footer">数据仅供个人学习与记录参考，不构成投资建议；基金有风险，投资需谨慎。</div>
 </div>
 
-<div id="loginModal" class="modal">
-  <div class="modal-card">
-    <h2>登录 ikun基金</h2>
-    <p class="note">当前为本地模式：邮箱仅用于本机标识，不会云端同步。后续可扩展为验证码登录和云端同步。</p>
-    <input id="emailInput" class="full" placeholder="请输入邮箱" />
-    <div class="row modal-actions"><button id="loginClose" class="btn2">取消</button><button id="loginSave" class="btn">保存</button></div>
-  </div>
-</div>
+<div id="loginModal" class="modal"><div class="modal-card"><h2>登录 ikun基金</h2><p class="note">当前为本地模式：邮箱仅用于本机标识，不会云端同步。后续可扩展为验证码登录和云端同步。</p><input id="emailInput" class="full" placeholder="请输入邮箱" /><div class="row modal-actions"><button id="loginClose" class="btn2">取消</button><button id="loginSave" class="btn">保存</button></div></div></div>
 
 <script src="/app.js"></script>
 <script src="/site-enhancements.js?v=1"></script>
-<script src="/runtime-optimizer.js?v=3"></script>
+<script src="/portfolio-pro.js?v=1"></script>
+<script src="/trade-editor.js?v=1"></script>
+<script src="/data-maintenance.js?v=1"></script>
+<script src="/ai-summary-rules.js?v=1"></script>
+<script src="/runtime-optimizer.js?v=5"></script>
 </body>
 </html>
