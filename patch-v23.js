@@ -4,6 +4,10 @@
   function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function pct(v){if(v===undefined||v===null||v===''||Number.isNaN(Number(v)))return '—';v=Number(v);return (v>=0?'+':'')+v.toFixed(2)+'%'}
   function cls(v){if(v===undefined||v===null||v===''||Number.isNaN(Number(v)))return '';return Number(v)>=0?'red':'green'}
+  function loadThemePack(){
+    if(!document.querySelector('link[href="/v24.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/v24.css';document.head.appendChild(l)}
+    if(!document.querySelector('script[src="/patch-v24-theme.js"]')){const s=document.createElement('script');s.src='/patch-v24-theme.js';document.body.appendChild(s)}
+  }
   function ensureMarketSection(){
     if(!$('market')){const s=document.createElement('section');s.id='market';s.className='view';s.innerHTML='<div id="marketRoot" class="market-lite"></div>';document.querySelector('.view')?.insertAdjacentElement('afterend',s)}
     const nav=document.querySelector('.nav');
@@ -23,6 +27,6 @@
     root.innerHTML=`<div class="market-lite-head card"><div><h2>行情资讯</h2><p class="note">主要指数、板块总览和热点提示。数据来自公开行情接口，失败不造假。</p></div><button class="btn" onclick="loadMarketLite()">刷新行情</button></div><div class="market-lite-grid">${idx.map(x=>`<div class="market-index"><div class="mini">${esc(x.name)} ${esc(x.code)}</div><b>${x.price??'—'}</b><div class="${cls(x.pct)}">${pct(x.pct)}</div></div>`).join('')||'<div class="market-index">暂无指数数据</div>'}</div><div class="market-lite-cols"><div class="card"><h3>板块强度</h3>${strong.slice(0,10).map(x=>`<div class="market-sector-row"><b>${esc(x.name)}</b><span class="${cls(x.pct)}">${pct(x.pct)}</span></div>`).join('')||'<p class="note">暂无板块数据</p>'}</div><div class="card"><h3>板块弱势</h3>${weak.slice(0,10).map(x=>`<div class="market-sector-row"><b>${esc(x.name)}</b><span class="${cls(x.pct)}">${pct(x.pct)}</span></div>`).join('')||'<p class="note">暂无板块数据</p>'}</div></div><div class="card"><h3>热点提示</h3>${notes.map(n=>`<p class="note">${esc(n)}</p>`).join('')}</div>`;
   }
   window.loadMarketLite=loadMarketLite;
-  function boot(){try{ensureMarketSection();ensureTopActionCards()}catch(e){}}
+  function boot(){try{loadThemePack();ensureMarketSection();ensureTopActionCards()}catch(e){}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else setTimeout(boot,300);
 })();
