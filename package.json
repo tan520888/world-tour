@@ -1,8 +1,8 @@
 {
   "name": "ikun-fund-dashboard",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
-  "description": "ikun基金 V1.4 - 基金观察、自选基金、持仓计划、行情资讯、经理分析、PWA、本地持仓管理和规则版 AI 总结的个人基金看板",
+  "description": "ikun基金 V1.5 - 基金观察、自选基金、持仓计划、行情资讯、经理分析、PWA、本地持仓管理、规则版 AI 总结和体验维护工具的个人基金看板",
   "scripts": {
     "start": "vercel dev",
     "deploy": "vercel --prod",
