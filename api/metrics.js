@@ -117,10 +117,10 @@ async function mapLimit(items, limit, worker) {
 
 module.exports = async function handler(req, res) {
   const codes = String(req.query.codes || '').split(',').map(x=>x.trim()).filter(x=>/^\d{6}$/.test(x));
-  const unique = [...new Set(codes)].slice(0, 80);
+  const unique = [...new Set(codes)].slice(0, 40);
   if (!unique.length) return send(res, 200, { ok: true, updated_at: new Date().toLocaleString('zh-CN', {hour12:false}), data: {} });
-  const rows = await mapLimit(unique, 6, getMetric);
+  const rows = await mapLimit(unique, 4, getMetric);
   const data = {};
   for (const r of rows) data[r.code] = r;
-  send(res, 200, { ok: true, updated_at: new Date().toLocaleString('zh-CN', {hour12:false}), data });
+  send(res, 200, { ok: true, updated_at: new Date().toLocaleString('zh-CN', {hour12:false}), limited_to: unique.length, data });
 };
