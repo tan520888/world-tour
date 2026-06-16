@@ -1,4 +1,4 @@
-// runtime-optimizer.js - 页面不可见时暂停刷新 + sessionStorage 缓存工具 + 正式模块加载 + PWA
+// runtime-optimizer.js - 页面不可见时暂停刷新 + sessionStorage 缓存工具 + PWA + 行情缓存
 (function(){
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
@@ -10,24 +10,17 @@
   window.setFundCache=setFundCache;window.getFundCache=getFundCache;window.fetchWithFundCache=fetchWithFundCache;
   function setPaused(paused){var autoText=$('autoText'),toggleAuto=$('toggleAuto');if(paused){if(autoText)autoText.textContent='页面后台中：已暂停刷新';if(toggleAuto)toggleAuto.textContent='后台暂停中'}else{if(autoText)autoText.textContent='30秒自动刷新：开启';if(toggleAuto)toggleAuto.textContent='暂停自动刷新'}}
   function wrapRefresh(){if(window.__visibilityRefreshWrapped)return;var old=window.refresh||(typeof refresh==='function'?refresh:null);if(!old)return;window.__visibilityRefreshWrapped=true;window.refresh=refresh=async function(){if(document.hidden){console.log('页面在后台，跳过本次刷新');return}return old.apply(this,arguments)}}
-  function loadScript(src){if(!document.querySelector('script[src^="'+src.split('?')[0]+'"]')){var s=document.createElement('script');s.src=src;s.defer=true;document.body.appendChild(s)}}
-  function loadManagerBoard(){loadScript('/manager-board.js?v=1')}
-  function loadPortfolioPro(){loadScript('/portfolio-pro.js?v=1')}
-  function loadHotThemeShortcuts(){loadScript('/hot-theme-shortcuts.js?v=1')}
-  function loadAiSummaryRules(){loadScript('/ai-summary-rules.js?v=1')}
-  function loadDataMaintenance(){loadScript('/data-maintenance.js?v=1')}
-  function loadTradeEditor(){loadScript('/trade-editor.js?v=1')}
   function setupPWA(){
     if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement('link');l.rel='manifest';l.href='/manifest.json';document.head.appendChild(l)}
     if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){var a=document.createElement('meta');a.name='apple-mobile-web-app-capable';a.content='yes';document.head.appendChild(a)}
     if(!document.querySelector('meta[name="apple-mobile-web-app-title"]')){var t=document.createElement('meta');t.name='apple-mobile-web-app-title';t.content='ikun基金';document.head.appendChild(t)}
     var note=document.querySelector('#loginModal .note');if(note)note.textContent='当前为本地模式：邮箱仅用于本机标识，不会云端同步。后续接入云端后，可同步自选基金、持仓记录和预警提醒。';
-    if('serviceWorker' in navigator&&!window.__ikunSwRegistered){window.__ikunSwRegistered=true;window.addEventListener('load',function(){navigator.serviceWorker.register('/service-worker.js').catch(function(e){console.warn('Service Worker 注册失败：',e)})})}
+    if('serviceWorker' in navigator&&!window.__ikunSwRegistered){window.__ikunSwRegistered=true;window.addEventListener('load',function(){navigator.serviceWorker.register('/service-worker.js').then(function(){console.log('Service Worker registered')}).catch(function(e){console.warn('Service Worker 注册失败：',e)})})}
   }
   function renderMarket(m){var root=$('marketRoot');if(!root)return;var idx=m.indices||[],strong=m.strongest||[],weak=m.weakest||[],notes=m.notes||[];var avg=idx.length?idx.reduce(function(s,x){return s+(Number(x.pct)||0)},0)/idx.length:0;var state=avg>0.4?'修复偏强':avg<-0.4?'防守偏弱':'震荡观察';var strategy=avg>0.4?'可关注强主线的回踩机会，不追连续大涨。':avg<-0.4?'先控仓，等待指数和涨跌家数同步修复。':'以观察为主，等板块持续性和成交额确认。';root.innerHTML='<div class="market-brief"><div class="card brief-main"><h2>今日午评 · '+state+'</h2><p class="note">行情资讯已接入 3 小时 sessionStorage 缓存，避免反复请求。</p><div class="brief-tags"><span class="brief-tag">指数均值 '+fmt(avg)+'</span><span class="brief-tag">强势板块 '+strong.length+'个</span><span class="brief-tag">弱势板块 '+weak.length+'个</span></div><h3>操作节奏</h3><p>'+strategy+'</p></div><div class="card"><h3>指数快照</h3>'+(idx.slice(0,7).map(function(x){return '<div class="market-sector-row"><b>'+esc(x.name)+'</b><span class="'+cls(x.pct)+'">'+(x.price||'—')+'｜'+fmt(x.pct)+'</span></div>'}).join('')||'<p class="note">暂无指数数据</p>')+'</div></div><div class="market-lite-cols"><div class="card"><h3>板块强度</h3>'+(strong.slice(0,12).map(function(x){return '<div class="market-sector-row"><b>'+esc(x.name)+'</b><span class="'+cls(x.pct)+'">'+fmt(x.pct)+'</span></div>'}).join('')||'<p class="note">暂无板块数据</p>')+'</div><div class="card"><h3>板块弱势</h3>'+(weak.slice(0,12).map(function(x){return '<div class="market-sector-row"><b>'+esc(x.name)+'</b><span class="'+cls(x.pct)+'">'+fmt(x.pct)+'</span></div>'}).join('')||'<p class="note">暂无板块数据</p>')+'</div></div><div class="card"><h3>系统看盘提示</h3>'+((notes.length?notes:[strategy]).map(function(n){return '<p class="note">'+esc(n)+'</p>'}).join(''))+'</div>'}
   function installMarketCache(){window.loadMarketLite=async function(){var root=$('marketRoot');if(root)root.innerHTML='<div class="card">正在加载行情资讯……</div>';try{var m=await fetchWithFundCache('market-lite-v1','/api/market',3*60*60*1000);renderMarket(m)}catch(e){if(root)root.innerHTML='<div class="card">行情资讯加载失败，请稍后再试。</div>'}}}
   document.addEventListener('visibilitychange',function(){if(document.hidden){setPaused(true)}else{setPaused(false);wrapRefresh();try{if(typeof refresh==='function')refresh()}catch(e){console.warn('切回页面刷新失败：',e)}}});
   var timer=setInterval(function(){wrapRefresh();if(window.__visibilityRefreshWrapped)clearInterval(timer)},300);
-  function boot(){setupPWA();loadManagerBoard();loadPortfolioPro();loadHotThemeShortcuts();loadAiSummaryRules();loadDataMaintenance();loadTradeEditor();installMarketCache()}
+  function boot(){setupPWA();installMarketCache()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else setTimeout(boot,300);
 })();
