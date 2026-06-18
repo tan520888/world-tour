@@ -1,4 +1,4 @@
-const CACHE_NAME='ikun-fund-v1-6';
+const CACHE_NAME='ikun-fund-v1-7';
 const CORE_ASSETS=[
   '/',
   '/index.html',
@@ -12,6 +12,8 @@ const CORE_ASSETS=[
   '/ai-summary-rules.js',
   '/manager-board.js',
   '/hot-theme-shortcuts.js',
+  '/sector-flow-board.js',
+  '/sector-flow-board.css',
   '/portfolio-pro.css',
   '/ai-summary-rules.css',
   '/manager-board.css',
