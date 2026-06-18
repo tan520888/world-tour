@@ -1,4 +1,4 @@
-const CACHE_NAME='ikun-fund-v1-7-1';
+const CACHE_NAME='ikun-fund-v1-8-1';
 const CORE_ASSETS=[
   '/',
   '/index.html',
