@@ -1,4 +1,4 @@
-const CACHE_NAME='ikun-fund-v1-9-0';
+const CACHE_NAME='ikun-fund-v2-0-0';
 const CORE_ASSETS=[
   '/',
   '/index.html',
@@ -6,6 +6,8 @@ const CORE_ASSETS=[
   '/app.js',
   '/site-enhancements.js',
   '/runtime-optimizer.js',
+  '/baby-mode.js',
+  '/baby-mode.css',
   '/portfolio-pro.js',
   '/trade-editor.js',
   '/data-maintenance.js',
