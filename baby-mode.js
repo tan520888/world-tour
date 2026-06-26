@@ -3,6 +3,25 @@
   var filter='all';
   var sort='default';
   var searchResults=[];
+  var BABY_PACK=[
+    ['008888','华夏国证半导体芯片ETF联接C','A股科技','高波动观察','高','半导体/芯片','高位买入或仓位重：反弹减；仓位轻：小额定投观察。'],
+    ['011608','易方达上证科创50ETF联接A','A股科技','核心定投观察','高','科创50','科技成长底仓观察，适合分批小额定投，不适合追高一次性重仓。'],
+    ['012551','华宝中证电子50ETF联接C','A股科技','高波动观察','高','电子50','与半导体/AI重合度较高，作为小仓增强，不建议重复过重。'],
+    ['024663','富国创业板人工智能ETF联接C','A股AI','高波动观察','很高','创业板AI','AI主题弹性大，只适合小仓位，连续大涨不追。'],
+    ['270042','广发纳斯达克100ETF联接A','海外宽基','核心定投观察','中高','纳指100','长期定投观察，注意QDII净值滞后和汇率波动。'],
+    ['006479','广发纳斯达克100ETF联接C','海外宽基','核心定投观察','中高','纳指100','适合小额定投，短线不要只看当天估值。'],
+    ['050025','博时标普500ETF联接A','海外宽基','核心定投观察','中','标普500','比纳指更均衡，可作为海外宽基分散。'],
+    ['161725','招商中证白酒指数A','低位消费','低位观察','中高','白酒','低位观察，不急着重仓补，等消费数据和资金回流。'],
+    ['003095','中欧医疗健康混合A','低位防御','低位观察','中高','医疗','等政策扰动下降和成交回流，再考虑小额。'],
+    ['012724','国泰中证畜牧养殖ETF联接A','低位周期','低位观察','中高','畜牧养殖','轻仓看猪周期，不追涨，等猪价和产能信号确认。'],
+    ['012725','国泰中证畜牧养殖ETF联接C','低位周期','低位观察','中高','畜牧养殖','短中期轻仓观察，用于和科技方向做低相关分散。'],
+    ['021297','鹏华国证有色金属ETF联接C','资源周期','低位观察','中高','有色金属','资源周期小仓观察，重点看美元、美债和商品价格。'],
+    ['005669','前海开源公用事业股票','电力电网','核心定投观察','中高','公用事业/电力','电力电网和AI用电逻辑，小仓观察，不追高。'],
+    ['011102','天弘中证光伏产业指数C','新能源链','低位观察','高','光伏低位','等产能出清和价格止跌，不急于重仓。'],
+    ['519674','银河创新成长混合A','A股科技','主题增强观察','高','热基/科技','强势但波动大，只能小仓增强，盈利多时考虑分批止盈。'],
+    ['320007','诺安成长混合','A股科技','高波动观察','高','半导体老牌','高波动，反弹先控仓，回踩企稳再看。'],
+    ['512480','国联安中证全指半导体ETF','A股科技','高波动观察','高','半导体ETF','场内半导体ETF波动大，适合观察趋势，不适合重仓追。']
+  ].map(function(x){return {code:x[0],name:x[1],category:x[2],group:x[3],risk:x[4],tag:x[5],actionNote:x[6],manager:'待补充',managerType:'观察包',managerScore:3}});
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
   function fmt(v){if(v===undefined||v===null||v===''||Number.isNaN(Number(v)))return '—';v=Number(v);return (v>=0?'+':'')+v.toFixed(2)+'%'}
@@ -51,6 +70,23 @@
     if(!m){searchBaby();return;}
     try{addFund({code:m[0],name:'自定义基金 '+m[0],category:'自定义基金',tag:'手动添加'},false);renderBabyHome();var st=$('babySearchStatus');if(st)st.textContent='已按代码添加 '+m[0]+'，正在刷新数据。'}catch(e){alert('添加失败：'+(e.message||e))}
   }
+  function babySyncPack(){
+    var st=$('babySearchStatus')||$('status');
+    try{
+      if(typeof CUSTOM==='undefined'||typeof FUNDS==='undefined')throw new Error('基金主程序还没加载完成');
+      var codes=BABY_PACK.map(function(f){return f.code});
+      if(typeof HIDDEN!=='undefined')HIDDEN=HIDDEN.filter(function(code){return !codes.includes(code)});
+      var extra=BABY_PACK.map(function(f){return typeof norm==='function'?norm(f):f});
+      CUSTOM=typeof merge==='function'?merge(CUSTOM,extra):extra;
+      if(typeof save==='function')save();
+      if(typeof BASE==='undefined')BASE=[];
+      FUNDS=typeof merge==='function'?merge(BASE,CUSTOM):CUSTOM;
+      if(typeof sel!=='undefined')sel='008888';
+      if(st)st.textContent='已同步 '+BABY_PACK.length+' 只观察基金，正在刷新数据。';
+      if(typeof render==='function')render();
+      if(typeof refresh==='function')refresh();
+    }catch(e){if(st)st.textContent='同步失败：'+(e.message||e);else alert('同步失败：'+(e.message||e))}
+  }
   function sectionBtn(id){try{if(typeof show==='function')show(id);setTimeout(function(){window.scrollTo({top:0,behavior:'smooth'})},30)}catch(e){}}
   function renderBabyHome(){
     var root=$('babyHomeRoot');
@@ -74,8 +110,8 @@
     var sb=$('babySearchBtn');if(sb)sb.addEventListener('click',function(){var q=($('babySearchInput')&&$('babySearchInput').value||'').trim();if(/^\d{6}$/.test(q))addByCode();else searchBaby()});
     var rb=$('babyRefreshBtn');if(rb)rb.addEventListener('click',function(){try{refresh()}catch(e){}});
     var db=$('babyDataBtn');if(db)db.addEventListener('click',function(){sectionBtn('data')});
-    var sync=$('babySyncBtn');if(sync)sync.addEventListener('click',function(){try{if(typeof syncWatchPack==='function')syncWatchPack();else sectionBtn('data')}catch(e){sectionBtn('data')}});
-    var es=$('babyEmptySync');if(es)es.addEventListener('click',function(){try{if(typeof syncWatchPack==='function')syncWatchPack();else sectionBtn('data')}catch(e){sectionBtn('data')}});
+    var sync=$('babySyncBtn');if(sync)sync.addEventListener('click',babySyncPack);
+    var es=$('babyEmptySync');if(es)es.addEventListener('click',babySyncPack);
     root.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){filter=btn.dataset.filter;renderBabyHome()})});
     var so=$('babySort');if(so)so.addEventListener('change',function(){sort=so.value;renderBabyHome()});
     root.querySelectorAll('[data-baby-hold]').forEach(function(btn){btn.addEventListener('click',function(){try{toggleHold(btn.dataset.babyHold);renderBabyHome()}catch(e){}})});
